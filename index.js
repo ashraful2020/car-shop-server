@@ -2,8 +2,9 @@ const express = require("express");
 const app = express();
 const port = process.env.PORT || 5000;
 const cors = require("cors");
-const { MongoClient, ServerApiVersion } = require("mongodb");
 require("dotenv").config();
+const { MongoClient, ServerApiVersion } = require("mongodb");
+const ObjectId = require("mongodb").ObjectId;
 
 // Application middleware
 app.use(cors());
@@ -30,8 +31,8 @@ async function run() {
     const extraCareCollection = database.collection("extra_care");
     const carCollection = database.collection("car");
     const reviewCollection = database.collection("review");
- 
- // route api 
+
+    // route api
     app.get("/", async (req, res) => {
       res.send(
         `<h1 style='color:#99bbf2;font-size:70px; margin-top:20%; text-align:center'> car shop server side</h1>`
@@ -55,6 +56,7 @@ async function run() {
       const id = req.params.id;
       const query = { _id: ObjectId(id) };
       const cursor = await carCollection.findOne(query);
+      console.log(cursor);
       res.json(cursor);
     });
 
@@ -161,7 +163,7 @@ async function run() {
     });
   } finally {
     // client.close();
-  } 
+  }
 }
 run().catch(console.dir);
 app.listen(port, () => {
